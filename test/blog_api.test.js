@@ -18,6 +18,7 @@ beforeEach(async () => {
   await Blog.insertMany(initialBlogs)
 })
 
+// Test para verificar que todos los blogs se devuelven como JSON y la cantidad es correcta
 test('all blogs are returned as JSON', async () => {
   const response = await api
     .get('/api/blogs')
@@ -25,6 +26,17 @@ test('all blogs are returned as JSON', async () => {
     .expect('Content-Type', /application\/json/);
 
     assert.strictEqual(response.body.length, initialBlogs.length);
+})
+
+// Test para verificar que existe el campo id y no existe _id
+test('the blogs have an id field', async () => {
+  const response = await api.get('/api/blogs');
+
+  const blogs = response.body;
+  blogs.forEach(blog => {
+    assert.ok(blog.id);
+    assert.strictEqual(blog._id, undefined);
+  })
 })
 
 after(async () => {
