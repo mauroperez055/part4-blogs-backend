@@ -57,9 +57,9 @@ blogsRouter.put("/:id", async (request, response) => {
   }
 
   // Actualizamos los campos
-  blog.title = title;
+  /* blog.title = title;
   blog.author = author;
-  blog.url = url;
+  blog.url = url; */
   blog.likes = likes;
 
   const updatedBlog = await blog.save();

@@ -120,6 +120,30 @@ describe("Blog API tests", () => {
     const titles = blogsAtEnd.map(b => b.title);;
     assert.ok(!titles.includes(blogToDelete.title));
   });
+
+  // Test para verificar que likes se actualizo correctamente
+  test('updating likes of a blog works', async () => {
+    const blogsAtStart = await Blog.find({});
+    const blogToUpdate = blogsAtStart[0];
+
+    const updatedData = {
+      likes: blogToUpdate.likes + 1
+    };
+
+    const response = await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(updatedData)
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
+
+    // Verificamos que likes haya cambiado
+    assert.strictEqual(response.body.likes, blogToUpdate.likes + 1);
+
+    // Verificamos que el resto del blog no cambió
+    assert.strictEqual(response.body.title, blogToUpdate.title);
+    assert.strictEqual(response.body.author, blogToUpdate.author);
+    assert.strictEqual(response.body.url, blogToUpdate.url);
+  })
 })
 
 // Cuando se finalizan todos los tests, cerramos la conexión a la base de datos
