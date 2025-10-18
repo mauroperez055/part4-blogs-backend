@@ -62,6 +62,22 @@ test('blog can be created', async () => {
     assert.ok(titles.includes('Tercer blog'));
 })
 
+test('field likes defaults to 0 if missing', async () => {
+  const newblog = {
+    title: 'Blog sin likes',
+    author: 'Apu Indio',
+    url: 'http://ejemplo4.com'
+  }
+
+  const response = await api
+    .post('/api/blogs')
+    .send(newblog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  assert.strictEqual(response.body.likes, 0);
+})
+
 after(async () => {
   await mongoose.connection.close();
 })
