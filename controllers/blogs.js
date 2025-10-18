@@ -38,7 +38,12 @@ blogsRouter.post("/", async (request, response) => {
 
 //elimino un blog por id
 blogsRouter.delete("/:id", async (request, response) => {
-  await Blog.findByIdAndDelete(request.params.id);
+  const deletedBlog = await Blog.findByIdAndDelete(request.params.id);
+
+  if (!deletedBlog) {
+    return response.status(404).json({ error: "Blog not found" });
+  }
+
   response.status(204).end();
 });
 
