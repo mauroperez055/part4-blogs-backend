@@ -5,11 +5,12 @@ const app = require('../app');
 const api = supertest(app);
 const Blog = require('../models/blog');
 const mongoose = require('mongoose');
+const { url } = require('node:inspector');
 
 // Datos iniciales de ejemplo
 const initialBlogs = [
-  { title: 'Primer blog', author: 'Mauro', url: 'http://ejemplo1.com', likes: 5 },
-  { title: 'Segundo blog', author: 'Perez', url: 'http://ejemplo2.com', likes: 10 }
+  { title: 'Primer blog', author: 'Mauro Perez', url: 'http://ejemplo1.com', likes: 5 },
+  { title: 'Segundo blog', author: 'Melisa Lucero', url: 'http://ejemplo2.com', likes: 10 }
 ]
 
 // Limpia la base de datos antes de cada test
@@ -37,6 +38,28 @@ test('the blogs have an id field', async () => {
     assert.ok(blog.id);
     assert.strictEqual(blog._id, undefined);
   })
+})
+
+// Test para crear un nuevo blog y verificar que se agrega correctamente
+test('blog can be created', async () => {
+  const newBlog = {
+    title: 'Tercer blog',
+    author: 'Corazon de Melon',
+    url: 'http://ejemplo3.com',
+    likes: 15
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+    const blogsAtEnd = await Blog.find({});
+    assert.strictEqual(blogsAtEnd.length, initialBlogs.length + 1);
+
+    const titles = blogsAtEnd.map(b => b.title);
+    assert.ok(titles.includes('Tercer blog'));
 })
 
 after(async () => {
