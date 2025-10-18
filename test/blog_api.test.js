@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 // Datos iniciales de ejemplo
 const initialBlogs = [
   { title: 'Primer blog', author: 'Mauro', url: 'http://ejemplo1.com', likes: 5 },
-  { title: 'Segundo blog', author: 'Perez', url: 'http://ejemplo2.com', likes: 10 },
+  { title: 'Segundo blog', author: 'Perez', url: 'http://ejemplo2.com', likes: 10 }
 ]
 
 // Limpia la base de datos antes de cada test
@@ -22,7 +22,7 @@ test('all blogs are returned as JSON', async () => {
   const response = await api
     .get('/api/blogs')
     .expect(200)
-    .expect('Content-Type', /application\/json/)
+    .expect('Content-Type', /application\/json/);
 
     assert.strictEqual(response.body.length, initialBlogs.length);
 })
